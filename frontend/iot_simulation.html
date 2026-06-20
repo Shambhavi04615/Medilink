@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT Simulation - MediLink</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #ffffff;
+        }
+
+        /* NAVBAR -------------------------- */
+        .navbar {
+            background: #ffffff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            color: #d90429;
+            letter-spacing: 1px;
+        }
+
+        .nav-link-custom {
+            color: #000;
+            font-weight: 600;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .nav-link-custom:hover {
+            color: #d90429;
+        }
+
+        .profile-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* PAGE HEADER -------------------------- */
+        .page-title {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #d90429;
+        }
+
+        /* IMAGE ------------------------------ */
+        .sim-img-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .sim-img {
+            width: 60%;
+            border-radius: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
+        }
+
+        /* CARD ------------------------------- */
+        .input-card {
+            width: 75%;
+            margin: 40px auto;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #ffd6dd;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #d90429;
+            margin-bottom: 12px;
+        }
+
+        .sample-text-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            height: 300px;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+            border: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        /* VIEW ANALYSIS BTN -------------------- */
+        .view-btn {
+            width: 240px;
+            margin: 25px auto 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 16px;
+            border: 2px solid #d90429;
+            padding: 12px 20px;
+            background: #ffffff;
+            color: #d90429;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            justify-content: center;
+        }
+
+        .view-btn:hover {
+            background: #fff2f4;
+            transform: translateY(-2px);
+        }
+
+        .view-btn img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+        }
+
+        /* FOOTER -------------------------- */
+        .footer {
+            background: #001f3f;
+            color: white;
+            padding: 30px 8%;
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <span class="logo-text">MEDILINK</span>
+
+        <div class="ms-auto d-flex align-items-center">
+            <span class="nav-link-custom" onclick="goToDashboard()">Dashboard</span>
+            <span class="nav-link-custom" onclick="logout()">Logout</span>
+        </div>
+    </nav>
+
+    <!-- TITLE -->
+    <h2 class="page-title">IOT Simulation:</h2>
+
+    <!-- SIM IMAGE -->
+    <div class="sim-img-container">
+        <img src="media/p9.png" class="sim-img" alt="IOT Simulation Image">
+    </div>
+
+    <!-- SAMPLE INPUT CARD -->
+    <div class="input-card">
+        <div class="input-card-title">Sample Input</div>
+
+        <div class="sample-text-box">
+Weight: 833.20 g | Stock: 100.0 %
+Weight: 1249.80 g | Stock: 100.0 %
+Weight: 1666.40 g | Stock: 100.0 %
+Weight: 2083.00 g | Stock: 100.0 %
+Weight: 2083.00 g | Stock: 100.0 %
+Weight: 2083.00 g | Stock: 100.0 %
+Weight: 2083.00 g | Stock: 100.0 %
+Weight: 2083.00 g | Stock: 100.0 %
+Weight: 2083.00 g | Stock: 100.0 %
+Weight: 2083.00 g | Stock: 100.0 %
+Weight: 2083.00 g | Stock: 100.0 %
+Weight: 2009.00 g | Stock: 100.0 %
+Weight: 1935.00 g | Stock: 100.0 %
+Weight: 1861.00 g | Stock: 100.0 %
+Weight: 1787.00 g | Stock: 100.0 %
+Weight: 1713.00 g | Stock: 100.0 %
+Weight: 1713.00 g | Stock: 100.0 %
+Weight: 1713.00 g | Stock: 100.0 %
+Weight: 1713.00 g | Stock: 100.0 %
+Weight: 1713.00 g | Stock: 100.0 %
+Weight: 1611.40 g | Stock: 100.0 %
+Weight: 1509.80 g | Stock: 100.0 %
+Weight: 1408.20 g | Stock: 100.0 %
+Weight: 1306.60 g | Stock: 100.0 %
+Weight: 1205.00 g | Stock: 100.0 %
+Weight: 1205.00 g | Stock: 100.0 %
+Weight: 1205.00 g | Stock: 100.0 %
+Weight: 1205.00 g | Stock: 100.0 %
+Weight: 1205.00 g | Stock: 100.0 %
+Weight: 1139.40 g | Stock: 100.0 %
+Weight: 1073.80 g | Stock: 100.0 %
+Weight: 1008.20 g | Stock: 100.0 %
+Weight: 942.60 g | Stock: 100.0 %
+Weight: 877.00 g | Stock: 100.0 %
+Weight: 877.00 g | Stock: 100.0 %
+Weight: 877.00 g | Stock: 100.0 %
+Weight: 782.20 g | Stock: 100.0 %
+Weight: 687.40 g | Stock: 100.0 %
+Weight: 592.60 g | Stock: 100.0 %
+Weight: 497.80 g | Stock: 100.0 %
+Weight: 403.00 g | Stock: 96.7 %
+        </div>
+
+        <!-- VIEW ANALYSIS BUTTON -->
+        <button class="view-btn" onclick="goToAnalysis()">
+            <img src="img/analysis_icon.png" alt="">
+            <span>View Analysis</span>
+        </button>
+    </div>
+
+    <!-- FOOTER -->
+    <section class="footer">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Contact</h5>
+                <p>500 Terry Francine Street<br>San Francisco, CA 94158</p>
+                <p>Phone: 123-456-7890</p>
+                <p>Email: info@medilink.com</p>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <a href="#">Terms & Conditions</a><br>
+                <a href="#">Privacy Policy</a>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Follow Us</h5>
+                <a href="#">LinkedIn</a><br>
+                <a href="#">YouTube</a><br>
+                <a href="#">Facebook</a>
+            </div>
+        </div>
+
+        <div class="text-center mt-3">
+            © 2025 MediLink Chain. All rights reserved.
+        </div>
+    </section>
+
+
+
+    <!-- JS LOGIC -->
+    <script>
+        function goToDashboard() {
+            window.location.href = "manufacturer_dashboard.html";
+        }
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+        function goToProfile() {
+            window.location.href = "profile.html";
+        }
+        function goToAnalysis() {
+            // Streamlit runs on port 8501 by default
+            window.open("http://localhost:8501", "_blank");
+        }
+    </script>
+
+</body>
+
+</html>

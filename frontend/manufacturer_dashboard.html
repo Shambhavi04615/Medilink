@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manufacturer Dashboard - MediLink</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #ffffff;
+        }
+
+        /* NAVBAR -------------------------- */
+        .navbar {
+            background: #ffffff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            color: #d90429;
+            letter-spacing: 1px;
+        }
+
+        .nav-link-custom {
+            color: #000;
+            font-weight: 600;
+            margin-left: 20px;
+        }
+
+        .nav-link-custom:hover {
+            color: #d90429;
+        }
+
+        .profile-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* HERO SECTION ------------------ */
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px 8%;
+        }
+
+        .hero-text {
+            width: 50%;
+        }
+
+        .hero-text h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: #d90429;
+        }
+
+        .hero-text h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        .hero-text p {
+            font-size: 16px;
+            margin-top: 15px;
+            color: #444;
+        }
+
+        .hero-img {
+            width: 45%;
+            border-radius: 15px;
+        }
+
+        /* CARDS ---------------------------- */
+        .card-btn {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid #d90429;
+            transition: 0.3s;
+            cursor: pointer;
+            height: 260px;
+        }
+
+        .card-btn:hover {
+            transform: translateY(-5px);
+            background: #fff5f7;
+        }
+
+        .card-logo {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #d90429;
+        }
+
+        .card-desc {
+            font-size: 15px;
+            color: #555;
+        }
+
+        /* FOOTER -------------------------- */
+        .footer {
+            background: #001f3f;
+            color: white;
+            padding: 50px;
+            margin-top: 80px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* MODAL -------------------------- */
+        #qrModal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #qrModalContent {
+            background: #fff;
+            padding: 25px;
+            border-radius: 18px;
+            text-align: center;
+            width: 420px;
+        }
+
+        #qrModal img {
+            width: 260px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .qr-close {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <span class="logo-text">MEDILINK</span>
+
+        <div class="ms-auto d-flex align-items-center">
+            <a class="nav-link-custom" href="about.html">About Us</a>
+            <a class="nav-link-custom" href="#" onclick="logout()">Logout</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1 id="welcomeName">Hi User!</h1>
+            <h3 id="userRole">Role: Manufacturer</h3>
+
+            <p>
+                As a Manufacturer, you can manage blockchain transactions, create batch
+                events, track production timelines, and update medicine pricing to ensure
+                transparency in the supply chain.
+            </p>
+        </div>
+
+        <img src="media/p1.jpeg" class="hero-img" alt="Dashboard Image" />
+    </section>
+
+    <!-- 3 FEATURE CARDS -->
+    <section class="container my-5">
+        <div class="row g-4">
+
+            <!-- ADD BLOCKCHAIN TRANSACTION -->
+            <div class="col-md-4">
+                <div class="card-btn text-center" onclick="location.href='add_transaction.html'">
+                    <img src="media/manufacturer_1.jpeg" class="card-logo" />
+                    <div class="card-title">Add Blockchain Transaction</div>
+                    <p class="card-desc">Upload new events, batch details and update the blockchain securely.</p>
+                </div>
+            </div>
+
+            <!-- BATCH EVENTS -->
+            <div class="col-md-4">
+                <div class="card-btn text-center" onclick="location.href='batch_events.html'">
+                    <img src="media/manufacturer_2.jpeg" class="card-logo" />
+                    <div class="card-title">Batch Events</div>
+                    <p class="card-desc">Add production events and track full batch process timelines.</p>
+                </div>
+            </div>
+
+            <!-- ✅ NEW QR CODE CARD -->
+            <div class="col-md-4">
+                <div class="card-btn text-center" onclick="openQRModal()">
+                    <img src="media/manufacturer_3.jpeg" class="card-logo" />
+                    <div class="card-title">QR Codes</div>
+                    <p class="card-desc">View QR codes for all batches generated in the blockchain.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="footer">
+        <div class="row">
+
+            <div class="col-md-4">
+                <h5>Contact</h5>
+                <p>Shambhavi Govindpurkar<br>Pune, Maharashtra , 411048</p>
+                <p>Phone: 9423077599</p>
+                <p>Email: shambhavi.govindpurkar24@vit.edu</p>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <a href="#">Terms & Conditions</a><br>
+                <a href="#">Privacy Policy</a>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Follow Us</h5>
+                <a href="#">LinkedIn</a><br>
+                <a href="#">Facebook</a>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-4">
+            © 2025 MediLink Chain. All rights reserved.
+        </div>
+    </section>
+
+    <!-- QR MODAL -->
+    <div id="qrModal" style="display:none;">
+        <div id="qrModalContent">
+            <div class="qr-close" onclick="closeQRModal()">✖</div>
+            <h4 class="text-danger">Select Batch QR</h4>
+
+            <select id="batchSelect" class="form-select mt-3">
+                <option value="" disabled selected>Select batch</option>
+            </select>
+
+            <img id="qrImage" src="" style="display:none;" />
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const API_BASE = "http://127.0.0.1:8000";
+
+        // Check login / token
+        if (!localStorage.getItem("token")) {
+            window.location.href = "login.html";
+        }
+
+        // Load user data
+        document.getElementById("welcomeName").innerText =
+            "Hi " + localStorage.getItem("name") + "!";
+        document.getElementById("userRole").innerText =
+            "Role: " + localStorage.getItem("role");
+
+        // Logout
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        // Profile page
+        function goToProfile() {
+            window.location.href = "profile.html";
+        }
+
+        /* -------------------------
+           QR MODAL FUNCTIONS
+        -------------------------- */
+
+        function openQRModal() {
+            document.getElementById("qrModal").style.display = "flex";
+
+            loadBatchList();
+        }
+
+        function closeQRModal() {
+            document.getElementById("qrModal").style.display = "none";
+        }
+
+        /* -------------------------
+           Load batch list from blockchain
+        -------------------------- */
+        async function loadBatchList() {
+            const res = await fetch(`${API_BASE}/blockchain/chain`, {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                }
+            });
+
+            const data = await res.json();
+            const select = document.getElementById("batchSelect");
+            select.innerHTML = `<option disabled selected>Select batch</option>`;
+
+            const used = new Set();
+
+            data.data.forEach(block => {
+                const batch = block.data.batch_no;
+                if (batch && !used.has(batch)) {
+                    used.add(batch);
+                    select.innerHTML += `<option value="${batch}">${batch}</option>`;
+                }
+            });
+
+            select.onchange = () => showQR(select.value);
+        }
+
+        function showQR(batch) {
+            const qrImg = document.getElementById("qrImage");
+            qrImg.src = `${API_BASE}/qrcodes/${batch}.png`;
+            qrImg.style.display = "block";
+        }
+    </script>
+
+</body>
+
+</html>

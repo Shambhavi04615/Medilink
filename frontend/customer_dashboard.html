@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MediLink — Customer Dashboard</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- jsQR -->
+  <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: "Poppins", sans-serif; background: #fff; }
+
+    /* Navbar */
+    .logo-text { font-weight: 800; color: #d90429; font-size: 24px; }
+    .nav-link-custom { text-decoration:none; font-weight:600; color:#333; }
+    .nav-link-custom:hover { color:#d90429; }
+
+    /* Cards */
+    .top-cards { margin-top: 40px; }
+    .result-card { border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,0.06); padding:18px; }
+    .card-icon {
+      width:56px; height:56px; border-radius:50%;
+      background:#f8f9fa; display:flex; align-items:center; justify-content:center;
+      font-size:26px;
+    }
+
+    /* Left buttons */
+    .section-buttons { display:flex; flex-direction:column; gap:12px; margin-top:30px; width:260px; }
+    .section-btn {
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      font-weight:700;
+      color:#d90429;
+      border:2px solid #d90429;
+      background:#fff;
+      text-align:left;
+    }
+    .section-btn:hover { background:#ffe6ea; cursor:pointer; }
+
+    /* Scanner */
+    #videoPreview { width:100%; max-width:560px; border-radius:8px; background:#000; }
+
+    /* Timeline */
+    .timeline { display:flex; gap:12px; overflow-x:auto; padding:12px 0; }
+    .timeline .step {
+      min-width:220px; border-radius:12px; padding:12px;
+      background:#fff; border:1px solid #eee; box-shadow:0 6px 16px rgba(0,0,0,0.04);
+    }
+
+    .chain-vis { display:flex; gap:12px; overflow-x:auto; padding:12px 0; }
+    .chain-box {
+      min-width:140px; height:120px; border-radius:8px;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:700;
+      background:#28a745; cursor:pointer;
+    }
+
+    #priceChart { height:250px !important; }
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg px-4 py-3">
+  <div class="container-fluid">
+    <span class="logo-text">MEDILINK</span>
+    <div class="ms-auto d-flex gap-3 align-items-center">
+      <a href="about.html" class="nav-link-custom">About</a>
+      <a href="#" class="nav-link-custom" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</nav>
+
+
+<main class="container mb-5">
+
+  <!-- TOP CARDS -->
+  <div class="row g-3 top-cards">
+    <div class="col-md-4">
+      <div class="p-3 result-card">
+        <div class="d-flex gap-3">
+          <div class="card-icon">🔍</div>
+          <div>
+            <h5>Verify Medicines</h5>
+            <p class="mb-0">Scan QR or enter batch number to verify authenticity.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="p-3 result-card">
+        <div class="d-flex gap-3">
+          <div class="card-icon">🧭</div>
+          <div>
+            <h5>View History</h5>
+            <p class="mb-0">Complete chain-of-custody supply timeline.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="p-3 result-card">
+        <div class="d-flex gap-3">
+          <div class="card-icon">💵</div>
+          <div>
+            <h5>Pricing Insights</h5>
+            <p class="mb-0">Pharmacist pricing thresholds and comparison graph.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- BUTTONS -->
+  <div class="section-buttons">
+    <button class="section-btn" onclick="openVerify()">🔍 Verify</button>
+    <button class="section-btn" onclick="openHistory()">🧭 History</button>
+    <button class="section-btn" onclick="openPricing()">💵 Pricing</button>
+  </div>
+
+
+  <!-- VERIFY SECTION -->
+  <section id="verifySection" style="display:none; margin-top:30px;">
+    <h3>Verify Medicine</h3>
+
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <h5>QR Scanner</h5>
+        <video id="videoPreview" playsinline></video>
+
+        <div class="mt-3 d-flex gap-2">
+          <button class="btn btn-outline-primary" onclick="startScanner()">Start Camera</button>
+          <button class="btn btn-outline-secondary" onclick="stopScanner()">Stop</button>
+          <input id="qrUpload" type="file" accept="image/*" onchange="onQRFile(event)" hidden>
+          <button class="btn btn-outline-danger" onclick="document.getElementById('qrUpload').click()">Upload QR</button>
+        </div>
+
+        <hr>
+
+        <h5>Manual Batch Entry</h5>
+        <div class="input-group mb-3">
+          <input id="manualBatch" class="form-control" placeholder="Enter batch number">
+          <button class="btn btn-danger" onclick="verifyNow()">Verify</button>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h5>Verification Result</h5>
+        <div id="verifyResult" class="result-card">
+          <p class="text-muted">No verification performed yet.</p>
+        </div>
+
+        <div id="pricingInline" class="mt-3" style="display:none;">
+          <h6>Price Confidence</h6>
+          <div id="priceMeter" style="height:28px; background:#eee; border-radius:12px;">
+            <div id="priceMeterFill" style="height:100%; width:0%; background:green;"></div>
+          </div>
+          <div class="mt-2" id="priceRangeCard"></div>
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- HISTORY SECTION -->
+<section id="historySection" style="display:none; margin-top:30px;">
+  <h3>History Timeline</h3>
+
+  <label class="mt-3">Select Batch Number:</label>
+  <select id="historyBatchSelect" class="form-control w-50" onchange="loadBatchHistory()">
+    <option value="">-- Select Batch --</option>
+  </select>
+
+  <div id="timeline" class="timeline mt-4"></div>
+
+  <h5 class="mt-3">Chain Visualization</h5>
+  <div id="chainVis" class="chain-vis"></div>
+</section>
+
+  <!-- PRICING SECTION -->
+  <section id="pricingSection" style="display:none; margin-top:30px;">
+    <h3>Pricing Tools</h3>
+
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <label><strong>Medicine Name</strong></label>
+        <input id="priceMedName" class="form-control" placeholder="e.g. Paracetamol">
+
+        <button class="btn btn-danger mt-2" onclick="loadPriceForMedicine()">Load Price Data</button>
+      </div>
+
+      <div class="col-md-6">
+        <div id="priceLoadedInfo" class="result-card">No price loaded.</div>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <h5>Check Price Validity</h5>
+
+    <label><strong>Price You Paid (₹)</strong></label>
+    <input type="number" id="customerPrice" class="form-control">
+
+    <button class="btn btn-primary mt-3" onclick="checkCustomerPrice()">Check Price</button>
+
+    <div id="customerPriceResult" class="result-card mt-3"></div>
+
+    <div class="mt-4">
+      <canvas id="priceChart" style="height:250px;"></canvas>
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer class="py-4 text-center">© 2025 MediLink</footer>
+
+
+<!-- ====================== JAVASCRIPT ========================= -->
+<script>
+
+const API_BASE = "http://127.0.0.1:8000";
+const token = localStorage.getItem("token");
+
+function hideAll() {
+  verifySection.style.display = "none";
+  historySection.style.display = "none";
+  pricingSection.style.display = "none";
+}
+function openVerify() { hideAll(); verifySection.style.display = "block"; }
+function openHistory() { hideAll(); historySection.style.display = "block"; loadBatchList(); }
+function openPricing() { hideAll(); pricingSection.style.display = "block"; }
+
+function logout() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+
+/* ========== QR SCANNER ========== */
+
+let stream = null;
+let scanning = false;
+const video = document.getElementById("videoPreview");
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+
+
+async function startScanner() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }});
+    video.srcObject = stream;
+    video.play();
+    scanning = true;
+    requestAnimationFrame(scanLoop);
+  } catch (err) {
+    alert("Camera error: " + err.message);
+  }
+}
+
+function stopScanner() {
+  scanning = false;
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  video.srcObject = null;
+}
+
+function scanLoop() {
+  if (!scanning) return;
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0);
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(img.data, img.width, img.height);
+
+    if (code) {
+      stopScanner();
+      manualBatch.value = code.data;
+      verifyNow();
+      return;
+    }
+  }
+  requestAnimationFrame(scanLoop);
+}
+
+function onQRFile(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(data.data, data.width, data.height);
+      if (code) {
+        manualBatch.value = code.data;
+        verifyNow();
+      } else {
+        alert("No QR found");
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+
+/* ========== VERIFY ========== */
+
+async function verifyNow() {
+  const batch = manualBatch.value.trim();
+  if (!batch) return alert("Enter batch number");
+
+  const r = await fetch(`${API_BASE}/customer/verify/${batch}`, {
+    headers: { "Authorization": "Bearer " + token }
+  });
+  
+  const j = await r.json();
+  if (!j.success) return alert("Verification failed");
+
+  renderVerify(j.data);
+  loadHistory(batch);
+}
+
+function renderVerify(d) {
+  const box = document.getElementById("verifyResult");
+  box.innerHTML = `
+    <h5>${d.medicine_name || "-"} <small class="text-muted">(${d.batch_no})</small></h5>
+    <p><strong>Status:</strong> <span class="badge bg-${d.validity === "valid" ? "success":"danger"}">${d.validity}</span></p>
+
+    <p><strong>Manufacturer:</strong> ${d.manufacturer || "-"}<br>
+       <strong>Last Receiver:</strong> ${d.last_receiver || "-"}<br>
+       <strong>Date:</strong> ${d.timestamp || "-"}<br>
+       <strong>Block Hash:</strong> ${d.block_hash || "-"}</p>
+
+    <hr>
+
+    <h6>Inventory Details</h6>
+    <p><strong>Expiry:</strong> ${d.inventory?.expiry_date || "-"}<br>
+       <strong>Status:</strong> ${d.inventory?.expiry_status || "-"}<br>
+       <strong>Stock:</strong> ${d.inventory?.stock_qty || "-"}<br>
+       <strong>Location:</strong> ${d.inventory?.location || "-"}</p>
+  `;
+}
+
+
+/* ========== HISTORY SECTION ========== */
+
+async function loadBatchList() {
+    const sel = document.getElementById("historyBatchSelect");
+
+    // Reset dropdown cleanly
+    sel.innerHTML = `<option value="">-- Select Batch --</option>`;
+
+    const r = await fetch(`${API_BASE}/customer/batches`, {
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    const j = await r.json();
+    if (!j.success) return;
+
+    // Add all batch numbers
+    j.data.forEach(batch => {
+        sel.innerHTML += `<option value="${batch}">${batch}</option>`;
+    });
+}
+
+
+async function loadBatchHistory() {
+    const batch = historyBatchSelect.value;
+    if (!batch) return;
+
+    const r = await fetch(`${API_BASE}/customer/history/${batch}`, {
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    const j = await r.json();
+    if (!j.success) return;
+
+    renderTimeline(j.data.timeline);
+    renderChain(j.data.timeline);
+}
+
+
+function renderTimeline(list) {
+  const t = timeline;
+  t.innerHTML = "";
+
+  list.forEach(ev => {
+    const div = document.createElement("div");
+    div.className = "step";
+
+    div.innerHTML = `
+      <strong>${ev.sender || "-"}</strong> → ${ev.receiver || "-"}<br>
+      <small>${ev.timestamp || "-"}</small>
+    `;
+    t.appendChild(div);
+  });
+}
+
+function renderChain(list) {
+  const c = chainVis;
+  c.innerHTML = "";
+
+  list.forEach(ev => {
+    const div = document.createElement("div");
+    div.className = "chain-box";
+    div.textContent = ev.sender || "Unknown";
+    c.appendChild(div);
+  });
+}
+
+
+/* ============================================================
+     FINAL — PRICING TOOLS (Option B Logic Integrated Fully)
+   ============================================================*/
+
+let loadedPriceData = null;
+let priceChart = null;
+
+async function loadPriceForMedicine() {
+  const med = priceMedName.value.trim();
+  if (!med) return alert("Enter medicine name");
+
+  const res = await fetch(`${API_BASE}/prices/get?medicine_name=${med}`, {
+    headers: { "Authorization": "Bearer " + token }
+  });
+
+  const out = await res.json();
+
+  if (!out.success || out.data.raw.length === 0) {
+    priceLoadedInfo.innerHTML = "No pricing data found.";
+    loadedPriceData = null;
+    return;
+  }
+
+  renderPriceInfo(out.data);
+}
+
+function renderPriceInfo(info) {
+  const raw = info.raw;
+
+  const globalMin = Math.min(...raw.map(r => r.threshold_min));
+  const globalMax = Math.max(...raw.map(r => r.threshold_max));
+
+  loadedPriceData = { globalMin, globalMax, raw };
+
+  priceLoadedInfo.innerHTML = `
+    <strong>Threshold Range:</strong> ₹${globalMin} — ₹${globalMax}
+    <br>Loaded ${raw.length} entries.
+  `;
+
+  const labels = raw.map((_, i) => `Entry ${i+1}`);
+  const mins = raw.map(r => r.threshold_min);
+  const maxs = raw.map(r => r.threshold_max);
+
+  const ctx = document.getElementById("priceChart").getContext("2d");
+  if (priceChart) priceChart.destroy();
+
+  priceChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        { label: "Min Threshold", data: mins, backgroundColor: "rgba(75,192,192,0.6)" },
+        { label: "Max Threshold", data: maxs, backgroundColor: "rgba(255,99,132,0.6)" }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+  });
+}
+
+function checkCustomerPrice() {
+  const price = Number(customerPrice.value);
+  const box = customerPriceResult;
+
+  if (!loadedPriceData) {
+    box.innerHTML = "<p>Please load price data first.</p>";
+    return;
+  }
+
+  if (!price) {
+    box.innerHTML = "<p>Please enter the price you paid.</p>";
+    return;
+  }
+
+  const { globalMin, globalMax } = loadedPriceData;
+
+  if (price < globalMin) {
+    box.innerHTML = `
+      <p class="text-danger"><strong>⚠ Price too LOW</strong></p>
+      <p>Paid: ₹${price}<br>Valid Range: ₹${globalMin} — ₹${globalMax}</p>
+    `;
+  }
+  else if (price > globalMax) {
+    box.innerHTML = `
+      <p class="text-danger"><strong>⚠ Price too HIGH</strong></p>
+      <p>Paid: ₹${price}<br>Valid Range: ₹${globalMin} — ₹${globalMax}</p>
+    `;
+  }
+  else {
+    box.innerHTML = `
+      <p class="text-success"><strong>✓ Price is VALID</strong></p>
+      <p>Paid: ₹${price}<br>Valid Range: ₹${globalMin} — ₹${globalMax}</p>
+    `;
+  }
+}
+
+</script>
+
+</body>
+</html>

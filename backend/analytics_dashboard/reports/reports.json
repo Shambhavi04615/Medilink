@@ -1,0 +1,179 @@
+[
+  {
+    "generated_at": 1765000000,
+    "n_samples": 360,
+    "kalman_sparse_count": 48,
+    "processing_time_ms": 812,
+    "position_accuracy": 91.4,
+    "demand_forecast": {
+      "forecasts": {
+        "JITTER": 12.5,
+        "PICK": 1423.7,
+        "BULK": 1720.2,
+        "RESTOCK": 520.0
+      },
+      "total": 3676.4,
+      "signatures": {
+        "JITTER": [
+          12.5,
+          85.0,
+          480.0
+        ],
+        "PICK": [
+          1423.7,
+          225000.0,
+          15000000.0
+        ],
+        "BULK": [
+          1720.2,
+          430000.0,
+          62000000.0
+        ],
+        "RESTOCK": [
+          520.0,
+          60000.0,
+          4500000.0
+        ]
+      }
+    },
+    "restock_report": [
+      {
+        "item_id": "SKU-COF-001",
+        "current_inventory": 850.0,
+        "consumption_rate": 12.5,
+        "recommended_restock_qty": 1200,
+        "risk": 0.87,
+        "p5": 1.2,
+        "p50": 2.8,
+        "p95": 6.5,
+        "action": "RESTOCK_NOW"
+      },
+      {
+        "item_id": "SKU-TEA-010",
+        "current_inventory": 4200.0,
+        "consumption_rate": 3.2,
+        "recommended_restock_qty": 2000,
+        "risk": 0.35,
+        "p5": 18.0,
+        "p50": 36.0,
+        "p95": 72.0,
+        "action": "RESTOCK_SOON"
+      },
+      {
+        "item_id": "SKU-MILK-05",
+        "current_inventory": 1500.0,
+        "consumption_rate": 18.0,
+        "recommended_restock_qty": 2500,
+        "risk": 0.94,
+        "p5": 0.8,
+        "p50": 1.6,
+        "p95": 4.0,
+        "action": "RESTOCK_NOW"
+      },
+      {
+        "item_id": "SKU-SNCK-21",
+        "current_inventory": 6000.0,
+        "consumption_rate": 1.2,
+        "recommended_restock_qty": 1500,
+        "risk": 0.12,
+        "p5": 72.0,
+        "p50": 144.0,
+        "p95": 300.0,
+        "action": "MONITOR"
+      }
+    ],
+    "events_indexed": 342,
+    "hourly_summary": {
+      "1764993600": {
+        "count": 28,
+        "total_consumed": 340.0,
+        "total_restocked": 0.0,
+        "variance": 250.3,
+        "anomaly_flags": []
+      },
+      "1764997200": {
+        "count": 48,
+        "total_consumed": 610.0,
+        "total_restocked": 0.0,
+        "variance": 820.1,
+        "anomaly_flags": []
+      },
+      "1765000800": {
+        "count": 72,
+        "total_consumed": 1350.0,
+        "total_restocked": 0.0,
+        "variance": 2400.6,
+        "anomaly_flags": [2, 17]
+      },
+      "1765004400": {
+        "count": 96,
+        "total_consumed": 1000.0,
+        "total_restocked": 1880.0,
+        "variance": 1100.0,
+        "anomaly_flags": [5]
+      },
+      "1765008000": {
+        "count": 98,
+        "total_consumed": 376.4,
+        "total_restocked": 520.0,
+        "variance": 420.8,
+        "anomaly_flags": []
+      }
+    },
+    "anomalies": [
+      {
+        "timestamp": 1765001200,
+        "title": "Consumption Spike",
+        "description": "A sudden 800g removal over 2 minutes detected (unusual bulk).",
+        "severity": "HIGH",
+        "severity_score": 0.78,
+        "type": "SPIKE",
+        "raw_data": {"delta_g": -800, "window_s": 120},
+        "business_impact": "May cause early stockout for SKU-MILK-05",
+        "recommended_action": "Verify if restock or payment error; inspect camera/logs"
+      },
+      {
+        "timestamp": 1765003000,
+        "title": "Sensor Drift Detected",
+        "description": "Baseline weight trending +6% vs baseline over last 4 hours.",
+        "severity": "MEDIUM",
+        "severity_score": 0.45,
+        "type": "DRIFT",
+        "raw_data": {"drift_pct": 6.1},
+        "business_impact": "Forecasts could be biased; small recalibration recommended",
+        "recommended_action": "Run quick calibration routine"
+      },
+      {
+        "timestamp": 1765007000,
+        "title": "High Jitter",
+        "description": "Short repeated jitter events detected near sensor mount.",
+        "severity": "LOW",
+        "severity_score": 0.15,
+        "type": "JITTER",
+        "raw_data": {"count": 12, "avg_mag_g": 8},
+        "business_impact": "Slight noise; minor effect on small pick detection",
+        "recommended_action": "Check shelf stability"
+      }
+    ],
+    "events_sample": [
+      {"timestamp": 1764993620, "type": "PICK", "weight": 25.0, "duration_s": 0.8, "position": [0.48, 0.51], "is_valid": true},
+      {"timestamp": 1764993650, "type": "PICK", "weight": 30.0, "duration_s": 0.6, "position": [0.45, 0.52], "is_valid": true},
+      {"timestamp": 1764999000, "type": "BULK", "weight": 450.0, "duration_s": 15.0, "position": [0.1, 0.9], "is_valid": true},
+      {"timestamp": 1765001200, "type": "BULK", "weight": 800.0, "duration_s": 120.0, "position": [0.5, 0.4], "is_valid": true},
+      {"timestamp": 1765003000, "type": "JITTER", "weight": 5.0, "duration_s": 0.1, "position": [0.3, 0.7], "is_valid": false}
+    ],
+    "metadata": {
+      "sensor_config": {"load_cells": 4, "temp_sensor": "LM35", "humidity_sensor": "DHT22", "sampling_hz": 10},
+      "algorithm_versions": {
+        "sensor_fusion": "v1.2",
+        "filtering": "Kalman-L1 v1.1",
+        "event_tracker": "v1.0",
+        "demand_estimation": "v1.1",
+        "trend_analysis": "v1.0",
+        "graph_model": "Hawkes-GNN v1.0",
+        "scheduler": "AdaptiveTopo v1.2"
+      },
+      "notes": "Synthetic enriched report for demo & dashboard visualization."
+    }
+  }
+]

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Blockchain Transaction - MediLink</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #ffffff;
+        }
+
+        /* NAVBAR -------------------------- */
+        .navbar {
+            background: #ffffff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            color: #d90429;
+            letter-spacing: 1px;
+        }
+
+        .nav-link-custom {
+            color: #000;
+            font-weight: 600;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .nav-link-custom:hover {
+            color: #d90429;
+        }
+
+        .profile-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* 🔹 BANNER (new) ------------------ */
+        .banner {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .banner img {
+            width: 100%;
+            height: 600px;
+            object-fit: fill;
+        }
+
+        /* PAGE HEADER ------------------ */
+        .page-header {
+            padding: 40px 8% 10px 8%;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #d90429;
+        }
+
+        .page-header p {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        /* INFO CARDS --------------------- */
+        .info-section {
+            padding: 20px 8% 10px 8%;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ffd6dd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            height: 100%;
+        }
+
+        .info-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #d90429;
+            margin-bottom: 8px;
+        }
+
+        .info-card-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .info-card small {
+            font-weight: 600;
+            color: #999;
+        }
+
+        /* MAIN ACTION BUTTONS ------------------ */
+        .action-section {
+            padding: 30px 8% 40px 8%;
+        }
+
+        .action-btn {
+            width: 100%;
+            border-radius: 16px;
+            border: 2px solid #d90429;
+            background: #ffffff;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #d90429;
+            margin-bottom: 12px;
+            transition: 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #fff5f7;
+            transform: translateY(-2px);
+        }
+
+        .action-btn img {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .collapse-card {
+            border-radius: 16px;
+            border: 1px solid #eee;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .form-label {
+            font-weight: 600;
+        }
+
+        .btn-primary-custom {
+            background: #d90429;
+            border-color: #d90429;
+            font-weight: 600;
+        }
+
+        .btn-primary-custom:hover {
+            background: #b30321;
+            border-color: #b30321;
+        }
+
+        .badge-hash {
+            background: #001f3f;
+        }
+
+        /* NEW: Clean transaction cards */
+        .tx-card {
+            border-radius: 12px;
+            border: 1px solid #ffd6dd;
+            padding: 14px;
+            margin-bottom: 12px;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tx-info {
+            flex: 1;
+        }
+
+        .tx-title {
+            color: #d90429;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .tx-meta {
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        .tx-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .btn-view {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-delete {
+            background: #ff3b30;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-view:hover {
+            opacity: 0.95;
+        }
+
+        .btn-delete:hover {
+            opacity: 0.95;
+        }
+
+        /* SEARCH BOX */
+        .search-box {
+            width: 320px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+
+        /* CHATBOT -------------------------- */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #d90429;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            z-index: 1000;
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 90px;
+            left: 20px;
+            width: 320px;
+            max-height: 420px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .chatbot-header {
+            background: #d90429;
+            color: #ffffff;
+            padding: 10px 14px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-body {
+            padding: 10px;
+            overflow-y: auto;
+            flex: 1;
+            background: #f8f9fa;
+        }
+
+        .chatbot-input {
+            padding: 8px;
+            border-top: 1px solid #eee;
+            background: #ffffff;
+        }
+
+        .chat-msg {
+            margin-bottom: 8px;
+            max-width: 90%;
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .chat-msg.user {
+            background: #d90429;
+            color: #ffffff;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-msg.bot {
+            background: #ffffff;
+            color: #222;
+            border: 1px solid #eee;
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-typing {
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        /* FOOTER -------------------------- */
+        .footer {
+            background: #001f3f;
+            color: white;
+            padding: 30px 8%;
+            margin-top: 50px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 25px 5% 5px 5%;
+            }
+
+            .info-section,
+            .action-section {
+                padding: 20px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <span class="logo-text">MEDILINK</span>
+
+        <div class="ms-auto d-flex align-items-center">
+            <span class="nav-link-custom" onclick="goToDashboard()">Dashboard</span>
+            <a class="nav-link-custom" href="about.html">About Us</a>
+            <span class="nav-link-custom" onclick="logout()">Logout</span>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <h1>Add Blockchain Transaction</h1>
+        <p>
+            Record every movement of a medicine batch on the blockchain. Add new
+            transactions, track hashes, and view the complete chain history for
+            maximum transparency.
+        </p>
+    </section>
+
+    <!-- INFO CARDS (4 cards) -->
+    <section class="info-section">
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="info-card">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="media/transaction_1.jpeg" class="info-card-icon" alt="">
+                        <div>
+                            <div class="info-card-title">1. Identify Batch</div>
+                            <small>Batch Basics</small>
+                        </div>
+                    </div>
+                    <p class="mb-0">
+                        Decide which <b>media</b> you want to record. Each batch maps
+                        to a unique journey in the blockchain.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="info-card">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="media/transaction_2.jpeg" class="info-card-icon" alt="">
+                        <div>
+                            <div class="info-card-title">2. Add Transaction</div>
+                            <small>Sender → Receiver</small>
+                        </div>
+                    </div>
+                    <p class="mb-0">
+                        Enter medicine name and who the batch is being sent to (receiver).
+                        MediLink signs it with your identity and timestamp.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="info-card">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="media/transaction_3.jpeg" class="info-card-icon" alt="">
+                        <div>
+                            <div class="info-card-title">3. Block + QR</div>
+                            <small>Hash + QR Code</small>
+                        </div>
+                    </div>
+                    <p class="mb-0">
+                        A new block is mined, linked to the previous one and a
+                        <b>QR code</b> is generated for packaging and later verification.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="info-card">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="media/Inventory_3.jpeg" class="info-card-icon" alt="">
+                        <div>
+                            <div class="info-card-title">4. Track History</div>
+                            <small>Full Chain</small>
+                        </div>
+                    </div>
+                    <p class="mb-0">
+                        Use the history view to inspect every block: hashes, timestamps
+                        and transaction data for audit & compliance.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACTION BUTTONS + COLLAPSE CONTENT -->
+    <section class="action-section">
+        <!-- Buttons -->
+        <div class="row mb-3">
+            <div class="col-md-6 mb-2">
+                <button class="action-btn" data-bs-toggle="collapse" data-bs-target="#addTxSection">
+                    <img src="img/add_tx_icon.png" alt="Add Transaction">
+                    <span>Add Transaction</span>
+                </button>
+            </div>
+            <div class="col-md-6 mb-2">
+                <button class="action-btn" data-bs-toggle="collapse" data-bs-target="#viewChainSection"
+                    onclick="loadBlockchain()">
+                    <img src="img/history_icon.png" alt="View Transactions">
+                    <span>View Transactions (History)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Add Transaction Section -->
+        <div class="collapse" id="addTxSection">
+            <div class="collapse-card">
+                <h5 class="mb-3">Create & Push New Transaction</h5>
+                <form id="txForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Batch Number</label>
+                            <input type="text" class="form-control" id="batchNo" required
+                                placeholder="e.g. BATCH-2025-001" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Medicine Name</label>
+                            <input type="text" class="form-control" id="medicineName" required
+                                placeholder="e.g. Paracetamol 650mg" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Receiver</label>
+                            <input type="text" class="form-control" id="receiver" required
+                                placeholder="e.g. CityCare Pharmacy" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            This transaction will be signed with your manufacturer account and added
+                            as a new block in the MediLink chain.
+                        </small>
+                        <button type="submit" class="btn btn-primary-custom">
+                            Push to Blockchain
+                        </button>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+
+                <div id="txResult" class="mt-2"></div>
+            </div>
+        </div>
+
+        <!-- View Blockchain Section (modified with search + nicer cards + delete) -->
+        <div class="collapse" id="viewChainSection">
+            <div class="collapse-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Blockchain History</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <input id="searchInput" type="text" class="search-box" placeholder="Search batch, medicine, receiver" oninput="applySearch()">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="loadBlockchain()">Refresh Chain</button>
+                    </div>
+                </div>
+                <p class="text-muted mb-3">
+                    View every block stored for all medicine batches.
+                </p>
+
+                <div id="chainContainer">
+                    <p class="text-muted">Click "Refresh Chain" to load data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="footer">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Contact</h5>
+                <p>500 Terry Francine Street<br>San Francisco, CA 94158</p>
+                <p>Phone: 123-456-7890</p>
+                <p>Email: info@medilink.com</p>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <a href="#">Terms & Conditions</a><br>
+                <a href="#">Privacy Policy</a>
+            </div>
+
+            <div class="col-md-4">
+                <h5>Follow Us</h5>
+                <a href="#">LinkedIn</a><br>
+                <a href="#">YouTube</a><br>
+                <a href="#">Facebook</a>
+            </div>
+        </div>
+
+        <div class="text-center mt-3">
+            © 2025 MediLink Chain. All rights reserved.
+        </div>
+    </section>
+
+    <!-- CHATBOT TOGGLE + WINDOW -->
+    <div class="chatbot-toggle" id="chatbotToggle">💬</div>
+
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <span>MediLink AI Assistant</span>
+            <span style="cursor:pointer;" onclick="toggleChatbot()">✕</span>
+        </div>
+        <div class="chatbot-body" id="chatbotBody">
+            <div class="chat-msg bot">
+                Hi! I can help you with blockchain transactions, hashes, or any MediLink questions.
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <div class="input-group input-group-sm">
+                <input type="text" id="chatInput" class="form-control" placeholder="Ask something..." />
+                <button class="btn btn-primary-custom" id="chatSendBtn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:8000"; // change if needed
+
+        // ------------- AUTH GUARD -----------------
+        const token = localStorage.getItem("token") || localStorage.getItem("access_token");
+        const role = localStorage.getItem("role");
+
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        if (role && role !== "manufacturer") {
+            alert("Only manufacturers can access the blockchain transaction page.");
+            // redirect to some safe page
+            window.location.href = "index.html";
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        function goToProfile() {
+            window.location.href = "profile.html";
+        }
+
+        function goToDashboard() {
+            window.location.href = "manufacturer_dashboard.html";
+        }
+
+        // ------------- ADD TRANSACTION -----------------
+        const txForm = document.getElementById("txForm");
+        const txResult = document.getElementById("txResult");
+
+        txForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const batchNo = document.getElementById("batchNo").value.trim();
+            const medicineName = document.getElementById("medicineName").value.trim();
+            const receiver = document.getElementById("receiver").value.trim();
+
+            if (!batchNo || !medicineName || !receiver) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            txResult.innerHTML = `<div class="text-muted">Pushing transaction to blockchain...</div>`;
+
+            try {
+                const url = `${API_BASE}/blockchain/add_transaction?batch_no=${encodeURIComponent(batchNo)}&medicine_name=${encodeURIComponent(medicineName)}&receiver=${encodeURIComponent(receiver)}`;
+
+                const res = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.detail || data.message || "Failed to add transaction");
+                }
+
+                const blockHash = data.data.block_hash;
+                const qrPath = data.data.qr_path;
+
+                txResult.innerHTML = `
+                    <div class="alert alert-success">
+                        <strong>Success!</strong> ${data.message}
+                    </div>
+                    <p class="mb-1">New Block Hash:
+                        <span class="badge badge-hash text-light">${blockHash}</span>
+                    </p>
+                    <p class="mb-1">Batch: <b>${batchNo}</b> | Medicine: <b>${medicineName}</b></p>
+                    ${qrPath ? `<p class="mb-0">QR Generated: <a href="${qrPath}" target="_blank">View / Download QR</a></p>` : ""}
+                `;
+
+                txForm.reset();
+
+            } catch (err) {
+                console.error(err);
+                txResult.innerHTML = `
+                    <div class="alert alert-danger">
+                        Failed to add transaction: ${err.message}
+                    </div>
+                `;
+            }
+        });
+
+        // ------------------ VIEW / DELETE / SEARCH TRANSACTIONS ------------------
+        let fullChain = [];
+
+        async function loadBlockchain() {
+            const container = document.getElementById("chainContainer");
+            container.innerHTML = `<p class="text-muted">Loading blockchain...</p>`;
+
+            try {
+                const res = await fetch(`${API_BASE}/blockchain/chain`, {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.detail || data.message || "Failed to fetch chain");
+                }
+
+                fullChain = data.data || [];
+
+                if (fullChain.length === 0) {
+                    container.innerHTML = `<p class="text-muted">No blocks in blockchain yet.</p>`;
+                    return;
+                }
+
+                renderChain(fullChain);
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        Failed to load blockchain: ${err.message}
+                    </div>
+                `;
+            }
+        }
+
+        function renderChain(chain) {
+            const container = document.getElementById("chainContainer");
+            container.innerHTML = "";
+
+            chain.forEach((block) => {
+                // create card
+                const card = document.createElement("div");
+                card.className = "tx-card";
+
+                // timestamp: prefer block.data.timestamp if present, else block.timestamp
+                const ts = block.data && block.data.timestamp ? (block.data.timestamp * 1000) : (block.timestamp * 1000);
+
+                const left = document.createElement("div");
+                left.className = "tx-info";
+                left.innerHTML = `
+                    <div class="tx-title">Batch: ${escapeHtml(block.data.batch_no || "N/A")}</div>
+                    <div class="tx-meta"><b>Medicine:</b> ${escapeHtml(block.data.medicine_name || "N/A")}</div>
+                    <div class="tx-meta"><b>From:</b> ${escapeHtml(block.data.sender || "N/A")} &nbsp; <b>To:</b> ${escapeHtml(block.data.receiver || "N/A")}</div>
+                    <div class="tx-meta"><b>Time:</b> ${new Date(ts).toLocaleString()}</div>
+                `;
+
+                const actions = document.createElement("div");
+                actions.className = "tx-actions";
+
+                // View QR (if exists)
+                const qrBtn = document.createElement("button");
+                qrBtn.className = "btn-view";
+                qrBtn.textContent = "View QR";
+                qrBtn.onclick = () => {
+                // Prefer explicit qr_path returned by backend
+                const explicitQr = block.data && block.data.qr_path;
+                const batch = block.data && block.data.batch_no;
+                let qrCandidate = null;
+
+                if (explicitQr && explicitQr !== "") {
+                    qrCandidate = explicitQr;
+                } else if (batch && batch !== "") {
+                    qrCandidate = `${API_BASE}/qrcodes/${encodeURIComponent(batch)}.png`;
+                }
+
+                if (!qrCandidate) {
+                    alert("No QR code is available for this block.");
+                return;
+                }
+
+                 // open the QR in a new tab
+                window.open(qrCandidate, "_blank");
+                };
+
+                // Delete button
+                const delBtn = document.createElement("button");
+                delBtn.className = "btn-delete";
+                delBtn.textContent = "Delete";
+                delBtn.onclick = async () => {
+                    if (!confirm(`Delete block #${block.index} permanently? This will rewrite the chain.`)) return;
+                    try {
+                        const res = await fetch(`${API_BASE}/blockchain/delete/${block.index}`, {
+                            method: "DELETE",
+                            headers: { "Authorization": "Bearer " + token }
+                        });
+                        const d = await res.json();
+                        if (!res.ok) throw new Error(d.detail || d.message || "Delete failed");
+                        alert("Block deleted successfully.");
+                        loadBlockchain();
+                    } catch (err) {
+                        console.error(err);
+                        alert("Failed to delete block: " + (err.message || err));
+                    }
+                };
+
+                actions.appendChild(qrBtn);
+                actions.appendChild(delBtn);
+
+                card.appendChild(left);
+                card.appendChild(actions);
+
+                container.appendChild(card);
+            });
+        }
+
+        function applySearch() {
+            const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
+            if (!q) {
+                renderChain(fullChain);
+                return;
+            }
+            const filtered = fullChain.filter(b => {
+                const bn = (b.data.batch_no || "").toString().toLowerCase();
+                const mn = (b.data.medicine_name || "").toString().toLowerCase();
+                const rc = (b.data.receiver || "").toString().toLowerCase();
+                const sd = (b.data.sender || "").toString().toLowerCase();
+                return bn.includes(q) || mn.includes(q) || rc.includes(q) || sd.includes(q);
+            });
+            renderChain(filtered);
+        }
+
+        // small helper to avoid XSS when injecting text
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function syntaxHighlightJSON(obj) {
+            let json = "";
+            try {
+                json = JSON.stringify(obj, null, 2);
+            } catch {
+                return String(obj);
+            }
+            return json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // ------------- CHATBOT -----------------
+        const chatbotToggle = document.getElementById("chatbotToggle");
+        const chatbotWindow = document.getElementById("chatbotWindow");
+        const chatbotBody = document.getElementById("chatbotBody");
+        const chatInput = document.getElementById("chatInput");
+        const chatSendBtn = document.getElementById("chatSendBtn");
+
+        chatbotToggle.addEventListener("click", toggleChatbot);
+        chatSendBtn.addEventListener("click", sendChat);
+        chatInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                sendChat();
+            }
+        });
+
+        function toggleChatbot() {
+            if (chatbotWindow.style.display === "flex") {
+                chatbotWindow.style.display = "none";
+            } else {
+                chatbotWindow.style.display = "flex";
+            }
+        }
+
+        function appendMessage(text, sender = "bot") {
+            const div = document.createElement("div");
+            div.className = `chat-msg ${sender}`;
+            div.textContent = text;
+            chatbotBody.appendChild(div);
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+        }
+
+        async function sendChat() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            appendMessage(message, "user");
+            chatInput.value = "";
+
+            const typing = document.createElement("div");
+            typing.className = "chat-typing";
+            typing.textContent = "Assistant is typing...";
+            chatbotBody.appendChild(typing);
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+
+            try {
+                const res = await fetch(`${API_BASE}/chatbot/query`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await res.json();
+                chatbotBody.removeChild(typing);
+
+                if (!res.ok) {
+                    appendMessage("Sorry, I couldn't process that request.", "bot");
+                    return;
+                }
+
+                appendMessage(data.reply || "No reply from AI.", "bot");
+
+            } catch (err) {
+                console.error(err);
+                chatbotBody.removeChild(typing);
+                appendMessage("Network error talking to chatbot.", "bot");
+            }
+        }
+    </script>
+</body>
+
+</html>
